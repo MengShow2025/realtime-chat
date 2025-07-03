@@ -1,23 +1,23 @@
 # 多阶段构建 Dockerfile
 # 第一阶段：构建 React 应用
-FROM node:16-alpine AS client-builder
+FROM node:18-alpine AS client-builder
 
 WORKDIR /app/client
 COPY client/package*.json ./
-RUN npm ci --only=production
+RUN npm install --only=production --legacy-peer-deps
 
 COPY client/ ./
 RUN npm run build
 
 # 第二阶段：构建最终镜像
-FROM node:16-alpine
+FROM node:18-alpine
 
 # 设置工作目录
 WORKDIR /app
 
 # 复制服务器端代码
 COPY server/package*.json ./
-RUN npm ci --only=production
+RUN npm install --only=production --legacy-peer-deps
 
 COPY server/ ./
 
