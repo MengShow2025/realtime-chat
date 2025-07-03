@@ -3,16 +3,22 @@
   "version": "1.0.0",
   "description": "实时聊天应用",
   "main": "server/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MengShow2025/realtime-chat.git"
+  },
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && node index.js",
     "client": "cd client && npm start",
-    "build": "cd client && npm run build",
+    "build": "cd client && npm run build && npm run build:server",
+    "build:server": "echo 'Server build complete'",
     "install-all": "npm install && cd server && npm install && cd ../client && npm install",
     "docker:build": "docker build -t realtime-chat .",
     "docker:run": "docker run -p 3001:3001 realtime-chat",
     "deploy:wechat": "./deploy.sh",
-    "start": "cd server && NODE_ENV=production node index.js"
+    "start": "cd server && NODE_ENV=production node index.js",
+    "vercel-build": "cd client && npm install && npm run build"
   },
   "keywords": [
     "chat",
