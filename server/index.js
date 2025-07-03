@@ -105,18 +105,29 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`服务器运行在端口 ${PORT}`);
-  console.log(`本地访问: http://localhost:${PORT}`);
+const HOST = process.env.HOST || '0.0.0.0'; // 允许外部访问
 
-  // 获取本机IP地址
+server.listen(PORT, HOST, () => {
+  console.log(`🚀 服务器运行在 ${HOST}:${PORT}`);
+  console.log(`📊 环境: ${process.env.NODE_ENV || 'development'}`);
+
+  // 显示所有可能的访问地址
   const os = require('os');
   const interfaces = os.networkInterfaces();
-  for (const name of Object.keys(interfaces)) {
-    for (const interface of interfaces[name]) {
-      if (interface.family === 'IPv4' && !interface.internal) {
-        console.log(`局域网访问: http://${interface.address}:${PORT}`);
+
+  console.log('\n🌐 可访问地址:');
+  console.log(`   本地: http://localhost:${PORT}`);
+
+  Object.keys(interfaces).forEach(name => {
+    interfaces[name].forEach(iface => {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        console.log(`   局域网: http://${iface.address}:${PORT}`);
       }
-    }
-  }
+    });
+  });
+
+  console.log('\n💡 让朋友访问的方法:');
+  console.log('   1. 内网穿透: ./start-with-ngrok.sh');
+  console.log('   2. 路由器转发: 参考 ROUTER_SETUP.md');
+  console.log('   3. 局域网访问: 使用上面显示的局域网地址');
 });
